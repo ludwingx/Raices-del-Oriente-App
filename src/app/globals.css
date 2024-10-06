@@ -9,7 +9,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #141e15;
     --foreground: #ededed;
   }
 }
@@ -18,10 +18,23 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  position: relative; /* Necesario para los pseudo-elementos */
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.MuiPaper-root {
+  color: white;
+  background-color: rgba(255, 255, 255, 0); /* Fondo transparente */
+  backdrop-filter: blur(10px); /* Efecto borroso */
+  -webkit-backdrop-filter: blur(10px); /* Soporte para Safari */
+  box-shadow: none; /* Elimina la sombra predeterminada */
+}
+
+.MuiDrawer-paper {
+  background-color: #141e15;
 }
