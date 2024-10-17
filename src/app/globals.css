@@ -80,5 +80,8 @@ body {
   height: 200px;
 }
 .buttonCart{
+  width: 100%;
+  height: 40px;
+  color: white;
   background-color: rgb(7, 48, 8);
 }
