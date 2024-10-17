@@ -161,7 +161,7 @@ const Catalog: React.FC = () => {
       )}
 
       <Drawer anchor="bottom" open={isCartOpen} onClose={toggleCartView} >
-        <Box sx={{ width: 300, p: 2 }}>
+        <Box sx={{  p: 2 }}>
           <IconButton
             sx={{ position: "absolute", top: 8, right: 8 }}
             onClick={toggleCartView}
@@ -171,13 +171,13 @@ const Catalog: React.FC = () => {
           <Box
             display="flex"
             justifyContent="space-between"
-            alignItems="center"
+            alignItems="center" sx={{ mb: 4 }}
           >
-            <Typography variant="h6">Carrito de Compras</Typography>
+            <Typography variant="h6" >Mi carrito </Typography>
           </Box>
 
           {cartItems.map((item) => (
-           <Box  key={item.id}>
+           <Box  key={item.id} >
              <Grid container spacing={2}>
               <Grid
                 size={8}
@@ -198,10 +198,10 @@ const Catalog: React.FC = () => {
               </Grid>
               <Grid
                 size={4}
-                sx={{ display: "flex", alignItems: "center" }}
+                sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}
               >
-                <Typography >
-                  Bs.{item.price.toFixed(2)}
+                <Typography  >
+                  Bs. {item.price.toFixed(2)}
                 </Typography>
                 <IconButton onClick={() => removeFromCart(item)} size="small">
                   <DeleteIcon sx={{ color: "white" }} />{" "}
@@ -211,12 +211,15 @@ const Catalog: React.FC = () => {
             </Grid>
            </Box>
           ))}
-
-          <Box mt={2}>
+          <hr />
+          <Box mt={2} sx={{ display: "flex", justifyContent: "flex-end"}}>
             <Typography variant="h6">
               Total: Bs. {cartTotal.toFixed(2)}
             </Typography>
-            <Button>Comprar</Button>
+
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 4}}>
+            <Button variant="contained" color="primary"  >Solicitar compra</Button>
           </Box>
         </Box>
       </Drawer>
