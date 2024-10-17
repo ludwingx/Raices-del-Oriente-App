@@ -177,7 +177,7 @@ const Catalog: React.FC = () => {
           </Box>
 
           {cartItems.map((item) => (
-           <Box>
+           <Box  key={item.id}>
              <Grid container spacing={2}>
               <Grid
                 size={8}
