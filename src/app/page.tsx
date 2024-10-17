@@ -44,6 +44,11 @@ export default function Home() {
         </Grid>
       </Box>
       <Catalog></Catalog>
+      <Box sx={{ my: 10 }}>
+        <Typography variant="h4" component="h2" gutterBottom>
+          Otras recomendaciones
+        </Typography>
+      </Box>
     </Container>
   );
 }
