@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Navbar from "@/components/nav";
-import '@/app/globals.css';
+// Importar Material UI antes
+import "@/app/globals.css"; // Colocar al final para dar mayor prioridad
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -19,7 +20,6 @@ export const metadata: Metadata = {
   description: "Explora nuestros bonsais exclusivos para mejorar tu entorno.",
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,7 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar></Navbar>
+        <Navbar />
         {children}
       </body>
     </html>
