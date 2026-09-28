@@ -3,22 +3,65 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Paleta Base: "Jardín Zen Botánico / Dark Luxury Nature" */
+  --bg-main: #0a110b;
+  --bg-surface: #101a11;
+  --bg-card: rgba(18, 30, 20, 0.72);
+  --bg-card-hover: rgba(24, 40, 26, 0.85);
+  --bg-glass-nav: rgba(10, 17, 11, 0.85);
+
+  --accent-emerald: #10b981;
+  --accent-emerald-light: #34d399;
+  --accent-emerald-dark: #047857;
+  --accent-gold: #f59e0b;
+  --accent-amber: #d97706;
+
+  --border-glass: rgba(52, 211, 153, 0.18);
+  --border-glass-hover: rgba(52, 211, 153, 0.45);
+  --border-gold: rgba(245, 158, 11, 0.35);
+
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --text-emerald: #6ee7b7;
+
+  --radius-card: 16px;
+  --radius-pill: 9999px;
+
+  --background: var(--bg-main);
+  --foreground: var(--text-primary);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #141e15;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  position: relative; /* Necesario para los pseudo-elementos */
+  color: var(--text-primary);
+  background-color: var(--bg-main);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+    radial-gradient(at 100% 30%, rgba(5, 150, 105, 0.06) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(4, 120, 87, 0.09) 0px, transparent 60%);
+  background-attachment: fixed;
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #090e09;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e3a24;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #10b981;
 }
 
 @layer utilities {
@@ -26,62 +69,167 @@ body {
     text-wrap: balance;
   }
 }
-.MuiButton-root {
-  color: white;
-  background-color: rgba(255, 255, 255, 0.087); /* Fondo transparente */
-  backdrop-filter: blur(10px); /* Efecto borroso */
-  -webkit-backdrop-filter: blur(10px); /* Soporte para Safari */
-  box-shadow: none; /* Elimina la sombra predeterminada */
-}
-.MuiPaper-root {
-  color: white;
-  background-color: rgba(255, 255, 255, 0); /* Fondo transparente */
-  backdrop-filter: blur(10px); /* Efecto borroso */
-  -webkit-backdrop-filter: blur(10px); /* Soporte para Safari */
-  box-shadow: none; /* Elimina la sombra predeterminada */
+
+/* ========================================================
+   ESTILOS DE COMPONENTES MATERIAL UI Y GLASSMORPHISM
+   ======================================================== */
+
+.MuiAppBar-root {
+  background-color: var(--bg-glass-nav) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-bottom: 1px solid var(--border-glass) !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5) !important;
 }
 
 .MuiDrawer-paper {
-  background-color: #141e15;
+  background-color: #0d160e !important;
+  color: var(--text-primary) !important;
+  border-left: 1px solid var(--border-glass) !important;
+  border-top: 1px solid var(--border-glass) !important;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8) !important;
 }
-.cardHome{
-  color: white;
-  background-color: rgba(255, 255, 255, 0.087); /* Fondo transparente */
-  backdrop-filter: blur(10px); /* Efecto borroso */
-  -webkit-backdrop-filter: blur(10px); /* Soporte para Safari */
-  box-shadow: none; /* Elimina la sombra predeterminada */
-  border: white 1px solid;
-  border-radius: 15px;
-  overflow: visible;
 
-  width: 350px;
-  height: 320px;
+.MuiButton-root {
+  text-transform: none !important;
+  font-weight: 500 !important;
+  border-radius: 10px !important;
+  transition: all 0.25s ease-in-out !important;
+}
 
+.MuiButton-containedPrimary {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.3) !important;
+}
+.MuiButton-containedPrimary:hover {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  box-shadow: 0 6px 20px 0 rgba(16, 185, 129, 0.45) !important;
+  transform: translateY(-1px) !important;
+}
+
+.MuiButton-outlinedPrimary {
+  border-color: rgba(52, 211, 153, 0.4) !important;
+  color: #6ee7b7 !important;
+  background-color: rgba(16, 185, 129, 0.05) !important;
+}
+.MuiButton-outlinedPrimary:hover {
+  border-color: #10b981 !important;
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  color: #ffffff !important;
+}
+
+/* Card Hero Principal con Efecto Flotante 3D */
+.cardHome {
+  color: var(--text-primary);
+  background: linear-gradient(145deg, rgba(24, 40, 26, 0.85) 0%, rgba(14, 25, 16, 0.95) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  border-radius: 20px;
+  overflow: visible !important;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 30px -5px rgba(16, 185, 129, 0.15);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
   position: relative;
-  top:40px;
 }
-.imageCardHome{
-  top: -30px;
-  position: relative;
-  overflow: visible;
+.cardHome:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px -15px rgba(0, 0, 0, 0.8), 0 0 35px 2px rgba(16, 185, 129, 0.25);
+  border-color: var(--border-glass-hover);
 }
-.cardProduct{
-  color: white;
-  background-color: rgba(255, 255, 255, 0.087); /* Fondo transparente */
-  backdrop-filter: blur(10px); /* Efecto borroso */
-  -webkit-backdrop-filter: blur(10px); /* Soporte para Safari */
-  box-shadow: none; /* Elimina la sombra predeterminada */
-  border: white 1px solid;
-  border-radius: 15px;
 
+.imageCardHome {
+  position: relative;
+  top: -35px;
+  overflow: visible !important;
+  filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.6));
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.imgCardProduct{
-  width: 100%;
-  height: 200px;
+.cardHome:hover .imageCardHome {
+  transform: scale(1.04) translateY(-4px);
 }
-.buttonCart{
+
+/* Tarjeta de Producto en Catálogo */
+.cardProduct {
+  color: var(--text-primary);
+  background: linear-gradient(160deg, rgba(20, 33, 22, 0.8) 0%, rgba(12, 21, 14, 0.9) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-glass);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+.cardProduct:hover {
+  transform: translateY(-6px);
+  border-color: var(--border-glass-hover);
+  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.7), 0 0 25px -2px rgba(16, 185, 129, 0.2);
+}
+
+/* Botón Destacado del Carrito */
+.buttonCart {
   width: 100%;
-  height: 40px;
-  color: white;
-  background-color: rgb(7, 48, 8);
+  height: 48px;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35) !important;
+  transition: all 0.25s ease !important;
+}
+.buttonCart:hover {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  box-shadow: 0 6px 22px rgba(16, 185, 129, 0.5) !important;
+  transform: scale(1.02);
+}
+
+/* Barra Flotante Inferior */
+.stickyCartBar {
+  background: rgba(14, 24, 16, 0.88) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-top: 1px solid rgba(52, 211, 153, 0.3) !important;
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Efecto de Pulso para Notificaciones y CTAs */
+@keyframes pulseSubtle {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+}
+.pulse-emerald {
+  animation: pulseSubtle 2.5s infinite;
+}
+
+/* Insignias de Categoría y Dificultad */
+.badge-tag {
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.badge-green {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(52, 211, 153, 0.3);
+}
+.badge-gold {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+.badge-blue {
+  background: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.3);
 }
