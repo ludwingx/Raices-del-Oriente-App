@@ -1,4 +1,5 @@
 import Catalog from "@/components/catalog";
+import CareGuide from "@/components/care-guide";
 import {
   Box,
   Container,
@@ -17,10 +18,6 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import YardIcon from "@mui/icons-material/Yard";
-import WaterDropIcon from "@mui/icons-material/WaterDrop";
-import WbSunnyIcon from "@mui/icons-material/WbSunny";
-import ContentCutIcon from "@mui/icons-material/ContentCut";
-import GrainIcon from "@mui/icons-material/Grain";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
@@ -286,182 +283,7 @@ export default function Home() {
       {/* ========================================================
           3. GUÍA ESENCIAL DE CUIDADOS BOTÁNICOS (#cuidados)
           ======================================================== */}
-      <Box
-        id="cuidados"
-        sx={{
-          py: 10,
-          background: "linear-gradient(180deg, rgba(16,185,129,0.02) 0%, rgba(10,17,11,0.8) 100%)",
-          borderTop: "1px solid rgba(52, 211, 153, 0.12)",
-          borderBottom: "1px solid rgba(52, 211, 153, 0.12)",
-        }}
-      >
-        <Container maxWidth="lg">
-          <Box sx={{ textAlign: "center", mb: 6 }}>
-            <Chip
-              label="SABIDURÍA & BOTÁNICA"
-              className="badge-tag badge-gold"
-              sx={{ mb: 1.5 }}
-            />
-            <Typography
-              variant="h3"
-              component="h2"
-              sx={{ fontWeight: 800, color: "#f9fafb", fontSize: { xs: "1.8rem", md: "2.6rem" }, mb: 1.5 }}
-            >
-              Guía Esencial de Cuidados en Bolivia
-            </Typography>
-            <Typography variant="body1" sx={{ color: "#9ca3af", maxWidth: 640, mx: "auto" }}>
-              Cuidar un bonsái no es difícil cuando entiendes sus cuatro necesidades biológicas fundamentales.
-              Te acompañamos en cada etapa de su crecimiento.
-            </Typography>
-          </Box>
-
-          <Grid container spacing={3}>
-            {/* Card 1: Riego */}
-            <Grid item xs={12} sm={6} md={3}>
-              <Box
-                sx={{
-                  p: 3,
-                  borderRadius: "18px",
-                  background: "rgba(18, 30, 20, 0.7)",
-                  border: "1px solid rgba(52, 211, 153, 0.15)",
-                  height: "100%",
-                  transition: "transform 0.3s ease",
-                  "&:hover": { transform: "translateY(-5px)", borderColor: "#10b981" },
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: "12px",
-                    background: "rgba(59, 130, 246, 0.15)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    mb: 2,
-                  }}
-                >
-                  <WaterDropIcon sx={{ color: "#60a5fa", fontSize: 28 }} />
-                </Box>
-                <Typography variant="h6" sx={{ fontWeight: 700, color: "#f9fafb", mb: 1 }}>
-                  Riego Consciente
-                </Typography>
-                <Typography variant="body2" sx={{ color: "#9ca3af", lineHeight: 1.6 }}>
-                  Riega únicamente cuando el sustrato empiece a sentirse seco al tacto. En climas cálidos como Santa Cruz se riega más a menudo que en el altiplano.
-                </Typography>
-              </Box>
-            </Grid>
-
-            {/* Card 2: Luz */}
-            <Grid item xs={12} sm={6} md={3}>
-              <Box
-                sx={{
-                  p: 3,
-                  borderRadius: "18px",
-                  background: "rgba(18, 30, 20, 0.7)",
-                  border: "1px solid rgba(52, 211, 153, 0.15)",
-                  height: "100%",
-                  transition: "transform 0.3s ease",
-                  "&:hover": { transform: "translateY(-5px)", borderColor: "#10b981" },
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: "12px",
-                    background: "rgba(245, 158, 11, 0.15)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    mb: 2,
-                  }}
-                >
-                  <WbSunnyIcon sx={{ color: "#fbbf24", fontSize: 28 }} />
-                </Box>
-                <Typography variant="h6" sx={{ fontWeight: 700, color: "#f9fafb", mb: 1 }}>
-                  Luz y Ubicación
-                </Typography>
-                <Typography variant="body2" sx={{ color: "#9ca3af", lineHeight: 1.6 }}>
-                  Los bonsáis necesitan luz abundante. Los de interior aman ventanales iluminados; las coníferas y pinos exigen sol exterior directo.
-                </Typography>
-              </Box>
-            </Grid>
-
-            {/* Card 3: Poda */}
-            <Grid item xs={12} sm={6} md={3}>
-              <Box
-                sx={{
-                  p: 3,
-                  borderRadius: "18px",
-                  background: "rgba(18, 30, 20, 0.7)",
-                  border: "1px solid rgba(52, 211, 153, 0.15)",
-                  height: "100%",
-                  transition: "transform 0.3s ease",
-                  "&:hover": { transform: "translateY(-5px)", borderColor: "#10b981" },
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: "12px",
-                    background: "rgba(168, 85, 247, 0.15)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    mb: 2,
-                  }}
-                >
-                  <ContentCutIcon sx={{ color: "#c084fc", fontSize: 28 }} />
-                </Box>
-                <Typography variant="h6" sx={{ fontWeight: 700, color: "#f9fafb", mb: 1 }}>
-                  Poda y Pinzado
-                </Typography>
-                <Typography variant="body2" sx={{ color: "#9ca3af", lineHeight: 1.6 }}>
-                  El pinzado de brotes tiernos en primavera estimula hojas más pequeñas y copas densas, manteniendo el diseño en miniatura original.
-                </Typography>
-              </Box>
-            </Grid>
-
-            {/* Card 4: Sustrato */}
-            <Grid item xs={12} sm={6} md={3}>
-              <Box
-                sx={{
-                  p: 3,
-                  borderRadius: "18px",
-                  background: "rgba(18, 30, 20, 0.7)",
-                  border: "1px solid rgba(52, 211, 153, 0.15)",
-                  height: "100%",
-                  transition: "transform 0.3s ease",
-                  "&:hover": { transform: "translateY(-5px)", borderColor: "#10b981" },
-                }}
-              >
-                <Box
-                  sx={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: "12px",
-                    background: "rgba(16, 185, 129, 0.15)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    mb: 2,
-                  }}
-                >
-                  <GrainIcon sx={{ color: "#34d399", fontSize: 28 }} />
-                </Box>
-                <Typography variant="h6" sx={{ fontWeight: 700, color: "#f9fafb", mb: 1 }}>
-                  Sustrato Drenante
-                </Typography>
-                <Typography variant="body2" sx={{ color: "#9ca3af", lineHeight: 1.6 }}>
-                  Utilizamos mezclas de grano volcánico (Akadama y gravilla) que oxigenan las raíces y evitan la pudrición por agua estancada.
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
+      <CareGuide />
 
       {/* ========================================================
           4. POR QUÉ ELEGIR RAÍCES DEL ORIENTE (#garantias)

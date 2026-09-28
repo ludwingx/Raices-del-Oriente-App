@@ -34,6 +34,15 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
+
+#inicio,
+#catalogo,
+#cuidados,
+#garantias,
+#contacto {
+  scroll-margin-top: 90px;
 }
 
 body {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Box,
   Button,
@@ -21,6 +21,8 @@ import {
   Divider,
   InputAdornment,
   Grid,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
@@ -50,6 +52,17 @@ const Catalog: React.FC = () => {
   const [customerNotes, setCustomerNotes] = useState("");
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
+  // Estados de Notificación (Feedback Inmediato)
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: "success" | "info";
+  }>({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
   // Estados de Filtro y Búsqueda
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -57,6 +70,13 @@ const Catalog: React.FC = () => {
 
   // Estado de Ficha Botánica (Modal de Detalle)
   const [selectedBonsai, setSelectedBonsai] = useState<Bonsai | null>(null);
+
+  // Escuchar evento global desde el Navbar para abrir el carrito
+  useEffect(() => {
+    const handleOpenCart = () => setIsCartOpen(true);
+    window.addEventListener("open-cart-drawer", handleOpenCart);
+    return () => window.removeEventListener("open-cart-drawer", handleOpenCart);
+  }, []);
 
   // Totales calculados
   const cartTotal = useMemo(() => {
@@ -67,13 +87,23 @@ const Catalog: React.FC = () => {
     return cartItems.reduce((acc, item) => acc + item.quantity, 0);
   }, [cartItems]);
 
-  // Manejo de Carrito
+  // Manejo de Carrito con Feedback Visual Inmediato
   const toggleCart = (product: Bonsai) => {
     setCartItems((prev) => {
       const exists = prev.find((item) => item.bonsai.id === product.id);
       if (exists) {
+        setSnackbar({
+          open: true,
+          message: `🗑️ ${product.name} retirado del pedido`,
+          severity: "info",
+        });
         return prev.filter((item) => item.bonsai.id !== product.id);
       } else {
+        setSnackbar({
+          open: true,
+          message: `🌿 ¡${product.name} añadido al carrito!`,
+          severity: "success",
+        });
         return [...prev, { bonsai: product, quantity: 1 }];
       }
     });
@@ -94,11 +124,19 @@ const Catalog: React.FC = () => {
   };
 
   const removeFromCart = (id: number) => {
-    setCartItems((prev) => prev.filter((item) => item.bonsai.id !== id));
+    const item = cartItems.find((i) => i.bonsai.id === id);
+    if (item) {
+      setSnackbar({
+        open: true,
+        message: `🗑️ ${item.bonsai.name} retirado del pedido`,
+        severity: "info",
+      });
+    }
+    setCartItems((prev) => prev.filter((i) => i.bonsai.id !== id));
   };
 
   const toggleCartView = () => {
-    setIsCartOpen(!isCartOpen);
+    setIsCartOpen((prev) => !prev);
   };
 
   // Filtrado y Ordenamiento
@@ -116,13 +154,13 @@ const Catalog: React.FC = () => {
       .sort((a, b) => {
         if (sortBy === "price-asc") return a.price - b.price;
         if (sortBy === "price-desc") return b.price - a.price;
-        return 0; // featured
+        return 0;
       });
   }, [selectedCategory, searchQuery, sortBy]);
 
   // Generador de Checkout hacia WhatsApp
   const handleWhatsAppCheckout = () => {
-    const storePhone = "59178900000"; // Número oficial de ventas en Bolivia
+    const storePhone = "59178900000";
     const itemsList = cartItems
       .map(
         (item, index) =>
@@ -340,7 +378,7 @@ const Catalog: React.FC = () => {
                     </span>
                   </Box>
 
-                  {/* Contenedor de Imagen con Efecto Hover */}
+                  {/* Contenedor de Imagen con Efecto Hover y Clic para Ficha */}
                   <Box
                     sx={{
                       position: "relative",
@@ -441,7 +479,7 @@ const Catalog: React.FC = () => {
                     </Box>
                   </CardContent>
 
-                  {/* Acciones y Precio */}
+                  {/* Acciones y Precio Claramente Visibles */}
                   <CardActions
                     sx={{
                       justifyContent: "space-between",
@@ -467,40 +505,56 @@ const Catalog: React.FC = () => {
                       </Typography>
                     </Box>
 
-                    <Box sx={{ display: "flex", gap: 1 }}>
+                    <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                      {/* Botón Ver Ficha */}
                       <Button
                         size="small"
                         variant="outlined"
-                        onClick={() => setSelectedBonsai(bonsai)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedBonsai(bonsai);
+                        }}
                         sx={{
                           px: 1.5,
+                          py: 0.6,
                           fontSize: "0.78rem",
-                          borderColor: "rgba(52, 211, 153, 0.25) !important",
+                          fontWeight: 600,
+                          borderColor: "rgba(52, 211, 153, 0.3) !important",
+                          color: "#34d399 !important",
+                          "&:hover": {
+                            borderColor: "#10b981 !important",
+                            backgroundColor: "rgba(16, 185, 129, 0.15) !important",
+                          },
                         }}
                       >
                         Ficha
                       </Button>
 
-                      <IconButton
-                        size="medium"
-                        onClick={() => toggleCart(bonsai)}
+                      {/* Botón Añadir / En Carrito con Texto Claro */}
+                      <Button
+                        size="small"
+                        variant="contained"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleCart(bonsai);
+                        }}
+                        startIcon={isAdded ? <ShoppingBasketIcon /> : <AddShoppingCartIcon />}
                         sx={{
-                          color: isAdded ? "#ffffff" : "#34d399",
-                          backgroundColor: isAdded
-                            ? "#059669 !important"
-                            : "rgba(16, 185, 129, 0.12) !important",
-                          border: isAdded
-                            ? "1px solid #10b981"
-                            : "1px solid rgba(52, 211, 153, 0.3)",
-                          "&:hover": {
-                            backgroundColor: isAdded
-                              ? "#047857 !important"
-                              : "rgba(16, 185, 129, 0.25) !important",
-                          },
+                          fontSize: "0.8rem",
+                          fontWeight: 700,
+                          px: 1.8,
+                          py: 0.7,
+                          background: isAdded
+                            ? "linear-gradient(135deg, #059669 0%, #047857 100%) !important"
+                            : "linear-gradient(135deg, #10b981 0%, #059669 100%) !important",
+                          color: "#ffffff !important",
+                          boxShadow: isAdded
+                            ? "0 0 14px rgba(16, 185, 129, 0.5) !important"
+                            : "none !important",
                         }}
                       >
-                        {isAdded ? <ShoppingBasketIcon /> : <AddShoppingCartIcon />}
-                      </IconButton>
+                        {isAdded ? "En Carrito ✓" : "Añadir"}
+                      </Button>
                     </Box>
                   </CardActions>
                 </Card>
@@ -523,7 +577,7 @@ const Catalog: React.FC = () => {
             right: 0,
             py: 1.5,
             px: { xs: 2, md: 4 },
-            zIndex: 1200,
+            zIndex: 1050,
             display: "flex",
             justifyContent: "center",
           }}
@@ -544,10 +598,9 @@ const Catalog: React.FC = () => {
                 sx={{
                   display: { xs: "none", sm: "flex" },
                   alignItems: "center",
-                  gap: -1,
                 }}
               >
-                {cartItems.slice(0, 3).map((item) => (
+                {cartItems.slice(0, 3).map((item, idx) => (
                   <Box
                     key={item.bonsai.id}
                     component="img"
@@ -561,8 +614,7 @@ const Catalog: React.FC = () => {
                       backgroundColor: "#0d160e",
                       objectFit: "contain",
                       p: 0.3,
-                      ml: -1,
-                      "&:first-of-type": { ml: 0 },
+                      ml: idx > 0 ? -1.5 : 0,
                     }}
                   />
                 ))}
@@ -579,7 +631,8 @@ const Catalog: React.FC = () => {
                       justifyContent: "center",
                       fontSize: "0.75rem",
                       fontWeight: 700,
-                      ml: -1,
+                      ml: -1.5,
+                      border: "2px solid #10b981",
                     }}
                   >
                     +{cartItems.length - 3}
@@ -630,7 +683,7 @@ const Catalog: React.FC = () => {
       <Drawer
         anchor="bottom"
         open={isCartOpen}
-        onClose={toggleCartView}
+        onClose={() => setIsCartOpen(false)}
         PaperProps={{
           sx: {
             maxHeight: "88vh",
@@ -653,7 +706,7 @@ const Catalog: React.FC = () => {
                 {totalItemsCount} {totalItemsCount === 1 ? "árbol listo para entrega" : "árboles listos para entrega"}
               </Typography>
             </Box>
-            <IconButton onClick={toggleCartView} sx={{ color: "#9ca3af" }}>
+            <IconButton onClick={() => setIsCartOpen(false)} sx={{ color: "#9ca3af" }}>
               <CloseIcon />
             </IconButton>
           </Box>
@@ -661,197 +714,223 @@ const Catalog: React.FC = () => {
           <Divider sx={{ borderColor: "rgba(52, 211, 153, 0.15)", mb: 3 }} />
 
           {/* Listado de Ítems */}
-          <Box sx={{ maxHeight: "36vh", overflowY: "auto", pr: 1, mb: 3 }}>
-            {cartItems.map(({ bonsai, quantity }) => (
-              <Box
-                key={bonsai.id}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  p: 1.5,
-                  mb: 1.5,
-                  borderRadius: "14px",
-                  background: "rgba(255, 255, 255, 0.03)",
-                  border: "1px solid rgba(52, 211, 153, 0.1)",
-                }}
-              >
-                {/* Imagen y Título */}
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                  <Box
-                    component="img"
-                    src={bonsai.imageUrl}
-                    alt={bonsai.name}
-                    sx={{
-                      width: 58,
-                      height: 58,
-                      borderRadius: "10px",
-                      objectFit: "contain",
-                      backgroundColor: "rgba(16, 185, 129, 0.08)",
-                      p: 0.5,
-                    }}
-                  />
-                  <Box>
-                    <Typography variant="subtitle1" sx={{ fontWeight: 700, color: "#f3f4f6", lineHeight: 1.2 }}>
-                      {bonsai.name}
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: "#9ca3af" }}>
-                      Bs. {bonsai.price} c/u &bull; {bonsai.potType}
-                    </Typography>
-                  </Box>
-                </Box>
-
-                {/* Controles de Cantidad y Precio */}
-                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      backgroundColor: "rgba(255, 255, 255, 0.06)",
-                      borderRadius: "8px",
-                      border: "1px solid rgba(255, 255, 255, 0.1)",
-                    }}
-                  >
-                    <IconButton
-                      size="small"
-                      onClick={() => updateQuantity(bonsai.id, -1)}
-                      sx={{ color: "#d1d5db" }}
-                    >
-                      <RemoveIcon fontSize="small" />
-                    </IconButton>
-                    <Typography sx={{ px: 1.2, fontWeight: 700, fontSize: "0.9rem", color: "#ffffff" }}>
-                      {quantity}
-                    </Typography>
-                    <IconButton
-                      size="small"
-                      onClick={() => updateQuantity(bonsai.id, 1)}
-                      sx={{ color: "#d1d5db" }}
-                    >
-                      <AddIcon fontSize="small" />
-                    </IconButton>
+          {cartItems.length === 0 ? (
+            <Box sx={{ textAlign: "center", py: 4 }}>
+              <Typography variant="h6" sx={{ color: "#9ca3af", mb: 2 }}>
+                Tu carrito está vacío
+              </Typography>
+              <Button variant="outlined" onClick={() => setIsCartOpen(false)}>
+                Ver Catálogo de Bonsáis
+              </Button>
+            </Box>
+          ) : (
+            <Box sx={{ maxHeight: "36vh", overflowY: "auto", pr: 1, mb: 3 }}>
+              {cartItems.map(({ bonsai, quantity }) => (
+                <Box
+                  key={bonsai.id}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    p: 1.5,
+                    mb: 1.5,
+                    borderRadius: "14px",
+                    background: "rgba(255, 255, 255, 0.03)",
+                    border: "1px solid rgba(52, 211, 153, 0.1)",
+                  }}
+                >
+                  {/* Imagen y Título */}
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Box
+                      component="img"
+                      src={bonsai.imageUrl}
+                      alt={bonsai.name}
+                      sx={{
+                        width: 58,
+                        height: 58,
+                        borderRadius: "10px",
+                        objectFit: "contain",
+                        backgroundColor: "rgba(16, 185, 129, 0.08)",
+                        p: 0.5,
+                      }}
+                    />
+                    <Box>
+                      <Typography variant="subtitle1" sx={{ fontWeight: 700, color: "#f3f4f6", lineHeight: 1.2 }}>
+                        {bonsai.name}
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: "#9ca3af" }}>
+                        Bs. {bonsai.price} c/u &bull; {bonsai.potType}
+                      </Typography>
+                    </Box>
                   </Box>
 
-                  <Typography sx={{ fontWeight: 800, color: "#10b981", minWidth: 70, textAlign: "right" }}>
-                    Bs. {(bonsai.price * quantity).toFixed(2)}
-                  </Typography>
+                  {/* Controles de Cantidad y Precio */}
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        backgroundColor: "rgba(255, 255, 255, 0.06)",
+                        borderRadius: "8px",
+                        border: "1px solid rgba(255, 255, 255, 0.1)",
+                      }}
+                    >
+                      <IconButton
+                        size="small"
+                        onClick={() => updateQuantity(bonsai.id, -1)}
+                        sx={{ color: "#d1d5db" }}
+                      >
+                        <RemoveIcon fontSize="small" />
+                      </IconButton>
+                      <Typography sx={{ px: 1.2, fontWeight: 700, fontSize: "0.9rem", color: "#ffffff" }}>
+                        {quantity}
+                      </Typography>
+                      <IconButton
+                        size="small"
+                        onClick={() => updateQuantity(bonsai.id, 1)}
+                        sx={{ color: "#d1d5db" }}
+                      >
+                        <AddIcon fontSize="small" />
+                      </IconButton>
+                    </Box>
 
-                  <IconButton
-                    size="small"
-                    onClick={() => removeFromCart(bonsai.id)}
-                    sx={{ color: "#ef4444", "&:hover": { backgroundColor: "rgba(239, 68, 68, 0.15)" } }}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
+                    <Typography sx={{ fontWeight: 800, color: "#10b981", minWidth: 70, textAlign: "right" }}>
+                      Bs. {(bonsai.price * quantity).toFixed(2)}
+                    </Typography>
+
+                    <IconButton
+                      size="small"
+                      onClick={() => removeFromCart(bonsai.id)}
+                      sx={{ color: "#ef4444", "&:hover": { backgroundColor: "rgba(239, 68, 68, 0.15)" } }}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
                 </Box>
-              </Box>
-            ))}
-          </Box>
+              ))}
+            </Box>
+          )}
 
           {/* Opciones de Entrega y Notas */}
-          <Grid container spacing={2} sx={{ mb: 3 }}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                select
-                fullWidth
-                size="small"
-                label="Ciudad de Entrega en Bolivia"
-                value={deliveryCity}
-                onChange={(e) => setDeliveryCity(e.target.value)}
+          {cartItems.length > 0 && (
+            <>
+              <Grid container spacing={2} sx={{ mb: 3 }}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    select
+                    fullWidth
+                    size="small"
+                    label="Ciudad de Entrega en Bolivia"
+                    value={deliveryCity}
+                    onChange={(e) => setDeliveryCity(e.target.value)}
+                    sx={{
+                      "& .MuiInputLabel-root": { color: "#9ca3af" },
+                      "& .MuiOutlinedInput-root": {
+                        color: "#f3f4f6",
+                        backgroundColor: "rgba(255, 255, 255, 0.04)",
+                        "& fieldset": { borderColor: "rgba(52, 211, 153, 0.2)" },
+                      },
+                    }}
+                  >
+                    <MenuItem value="Santa Cruz de la Sierra">Santa Cruz de la Sierra (Envío local express)</MenuItem>
+                    <MenuItem value="La Paz / El Alto">La Paz / El Alto (Envío aéreo con empaque térmico)</MenuItem>
+                    <MenuItem value="Cochabamba">Cochabamba (Envío terrestre especializado)</MenuItem>
+                    <MenuItem value="Tarija / Sucre">Tarija / Sucre (Flota / encomienda segura)</MenuItem>
+                    <MenuItem value="Otra ciudad">Otra ciudad de Bolivia</MenuItem>
+                  </TextField>
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    label="Dedicatoria o Notas de Entrega (Opcional)"
+                    placeholder="Ej: Para regalo de cumpleaños / horario de entrega"
+                    value={customerNotes}
+                    onChange={(e) => setCustomerNotes(e.target.value)}
+                    sx={{
+                      "& .MuiInputLabel-root": { color: "#9ca3af" },
+                      "& .MuiOutlinedInput-root": {
+                        color: "#f3f4f6",
+                        backgroundColor: "rgba(255, 255, 255, 0.04)",
+                        "& fieldset": { borderColor: "rgba(52, 211, 153, 0.2)" },
+                      },
+                    }}
+                  />
+                </Grid>
+              </Grid>
+
+              {/* Resumen de Importe */}
+              <Box
                 sx={{
-                  "& .MuiInputLabel-root": { color: "#9ca3af" },
-                  "& .MuiOutlinedInput-root": {
-                    color: "#f3f4f6",
-                    backgroundColor: "rgba(255, 255, 255, 0.04)",
-                    "& fieldset": { borderColor: "rgba(52, 211, 153, 0.2)" },
-                  },
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  py: 2,
+                  borderTop: "1px solid rgba(52, 211, 153, 0.15)",
+                  mb: 3,
                 }}
               >
-                <MenuItem value="Santa Cruz de la Sierra">Santa Cruz de la Sierra (Envío local express)</MenuItem>
-                <MenuItem value="La Paz / El Alto">La Paz / El Alto (Envío aéreo con empaque térmico)</MenuItem>
-                <MenuItem value="Cochabamba">Cochabamba (Envío terrestre especializado)</MenuItem>
-                <MenuItem value="Tarija / Sucre">Tarija / Sucre (Flota / encomienda segura)</MenuItem>
-                <MenuItem value="Otra ciudad">Otra ciudad de Bolivia</MenuItem>
-              </TextField>
-            </Grid>
+                <Box>
+                  <Typography variant="body2" sx={{ color: "#9ca3af" }}>
+                    Total a cancelar:
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: "#34d399" }}>
+                    ✓ Incluye certificado de edad y guía de riego vitalicia
+                  </Typography>
+                </Box>
+                <Typography variant="h4" sx={{ fontWeight: 900, color: "#10b981" }}>
+                  Bs. {cartTotal.toFixed(2)}
+                </Typography>
+              </Box>
 
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                size="small"
-                label="Dedicatoria o Notas de Entrega (Opcional)"
-                placeholder="Ej: Para regalo de cumpleaños / horario de entrega"
-                value={customerNotes}
-                onChange={(e) => setCustomerNotes(e.target.value)}
-                sx={{
-                  "& .MuiInputLabel-root": { color: "#9ca3af" },
-                  "& .MuiOutlinedInput-root": {
-                    color: "#f3f4f6",
-                    backgroundColor: "rgba(255, 255, 255, 0.04)",
-                    "& fieldset": { borderColor: "rgba(52, 211, 153, 0.2)" },
-                  },
-                }}
-              />
-            </Grid>
-          </Grid>
+              {/* Botones de Finalización */}
+              <Box sx={{ display: "flex", gap: 2, flexDirection: { xs: "column", sm: "row" } }}>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  startIcon={<QrCode2Icon />}
+                  onClick={() => setIsQrModalOpen(true)}
+                  sx={{
+                    py: 1.5,
+                    borderColor: "rgba(245, 158, 11, 0.4) !important",
+                    color: "#fbbf24 !important",
+                    "&:hover": {
+                      borderColor: "#f59e0b !important",
+                      backgroundColor: "rgba(245, 158, 11, 0.1) !important",
+                    },
+                  }}
+                >
+                  Ver Datos de Pago QR Simple
+                </Button>
 
-          {/* Resumen de Importe */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              py: 2,
-              borderTop: "1px solid rgba(52, 211, 153, 0.15)",
-              mb: 3,
-            }}
-          >
-            <Box>
-              <Typography variant="body2" sx={{ color: "#9ca3af" }}>
-                Total a cancelar:
-              </Typography>
-              <Typography variant="caption" sx={{ color: "#34d399" }}>
-                ✓ Incluye certificado de edad y guía de riego vitalicia
-              </Typography>
-            </Box>
-            <Typography variant="h4" sx={{ fontWeight: 900, color: "#10b981" }}>
-              Bs. {cartTotal.toFixed(2)}
-            </Typography>
-          </Box>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  startIcon={<WhatsAppIcon />}
+                  onClick={handleWhatsAppCheckout}
+                  sx={{
+                    py: 1.5,
+                    background: "linear-gradient(135deg, #10b981 0%, #059669 100%) !important",
+                    color: "#ffffff !important",
+                    fontSize: "1rem",
+                    fontWeight: 700,
+                  }}
+                >
+                  Solicitar por WhatsApp (Confirmar Pedido)
+                </Button>
+              </Box>
+            </>
+          )}
 
-          {/* Botones de Finalización */}
-          <Box sx={{ display: "flex", gap: 2, flexDirection: { xs: "column", sm: "row" } }}>
+          {/* Botón Secundario de Cerrar Drawer */}
+          <Box sx={{ mt: 2, textAlign: "center" }}>
             <Button
-              fullWidth
-              variant="outlined"
-              startIcon={<QrCode2Icon />}
-              onClick={() => setIsQrModalOpen(true)}
-              sx={{
-                py: 1.5,
-                borderColor: "rgba(245, 158, 11, 0.4) !important",
-                color: "#fbbf24 !important",
-                "&:hover": {
-                  borderColor: "#f59e0b !important",
-                  backgroundColor: "rgba(245, 158, 11, 0.1) !important",
-                },
-              }}
+              size="small"
+              onClick={() => setIsCartOpen(false)}
+              sx={{ color: "#9ca3af", textDecoration: "underline" }}
             >
-              Ver Datos de Pago QR Simple
-            </Button>
-
-            <Button
-              fullWidth
-              variant="contained"
-              startIcon={<WhatsAppIcon />}
-              onClick={handleWhatsAppCheckout}
-              sx={{
-                py: 1.5,
-                background: "linear-gradient(135deg, #10b981 0%, #059669 100%) !important",
-                color: "#ffffff !important",
-                fontSize: "1rem",
-                fontWeight: 700,
-              }}
-            >
-              Solicitar por WhatsApp (Confirmar Pedido)
+              Seguir Explorando el Catálogo
             </Button>
           </Box>
         </Box>
@@ -1005,24 +1084,37 @@ const Catalog: React.FC = () => {
               </Typography>
             </Box>
 
-            <Button
-              variant="contained"
-              startIcon={<ShoppingBasketIcon />}
-              onClick={() => {
-                toggleCart(selectedBonsai);
-                setSelectedBonsai(null);
-              }}
-              sx={{
-                background: "linear-gradient(135deg, #10b981 0%, #059669 100%) !important",
-                color: "#ffffff !important",
-                px: 3,
-                fontWeight: 700,
-              }}
-            >
-              {cartItems.some((item) => item.bonsai.id === selectedBonsai.id)
-                ? "Quitar del Carrito"
-                : "Añadir al Carrito"}
-            </Button>
+            <Box sx={{ display: "flex", gap: 1 }}>
+              <Button
+                variant="outlined"
+                onClick={() => setSelectedBonsai(null)}
+                sx={{
+                  borderColor: "rgba(255,255,255,0.2) !important",
+                  color: "#d1d5db !important",
+                }}
+              >
+                Cerrar
+              </Button>
+
+              <Button
+                variant="contained"
+                startIcon={<ShoppingBasketIcon />}
+                onClick={() => {
+                  toggleCart(selectedBonsai);
+                  setSelectedBonsai(null);
+                }}
+                sx={{
+                  background: "linear-gradient(135deg, #10b981 0%, #059669 100%) !important",
+                  color: "#ffffff !important",
+                  px: 3,
+                  fontWeight: 700,
+                }}
+              >
+                {cartItems.some((item) => item.bonsai.id === selectedBonsai.id)
+                  ? "Quitar del Carrito"
+                  : "Añadir al Carrito"}
+              </Button>
+            </Box>
           </DialogActions>
         </Dialog>
       )}
@@ -1109,6 +1201,44 @@ const Catalog: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* ========================================================
+          SNACKBAR DE NOTIFICACIÓN DE CARRITO (FEEDBACK INMEDIATO)
+          ======================================================== */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3500}
+        onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+          severity={snackbar.severity}
+          variant="filled"
+          action={
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setSnackbar((prev) => ({ ...prev, open: false }));
+                setIsCartOpen(true);
+              }}
+              sx={{ fontWeight: 800, textDecoration: "underline" }}
+            >
+              Ver Carrito
+            </Button>
+          }
+          sx={{
+            backgroundColor: snackbar.severity === "success" ? "#065f46" : "#1f2937",
+            color: "#ffffff",
+            border: "1px solid rgba(52, 211, 153, 0.3)",
+            borderRadius: "12px",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.6)",
+          }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

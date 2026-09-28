@@ -22,6 +22,7 @@ import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
 import SpaIcon from '@mui/icons-material/Spa';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
+import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 
 interface Props {
   window?: () => Window;
@@ -38,18 +39,26 @@ const navItems = [
 ];
 
 export default function Navbar(props: Props) {
-  const { window } = props;
+  const { window: windowProp } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
 
-  const handleScroll = (href: string) => {
+  const handleScroll = (e: React.MouseEvent, href: string) => {
+    e.preventDefault();
     setMobileOpen(false);
+
+    // Si hay algún modal o drawer abierto, cerrar
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+      if (typeof window !== 'undefined') {
+        window.history.pushState(null, '', href);
+      }
+    } else if (typeof window !== 'undefined') {
+      window.location.hash = href;
     }
   };
 
@@ -57,7 +66,15 @@ export default function Navbar(props: Props) {
     const message = encodeURIComponent(
       '¡Hola Raíces del Oriente! 🌿 Quisiera consultar sobre la disponibilidad de bonsáis y envíos.'
     );
-    globalThis.open(`https://wa.me/59178900000?text=${message}`, '_blank');
+    if (typeof window !== 'undefined') {
+      window.open(`https://wa.me/59178900000?text=${message}`, '_blank');
+    }
+  };
+
+  const openCartDrawer = () => {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('open-cart-drawer'));
+    }
   };
 
   const drawer = (
@@ -98,7 +115,9 @@ export default function Navbar(props: Props) {
         {navItems.map((item) => (
           <ListItem key={item.label} disablePadding sx={{ mb: 1 }}>
             <ListItemButton
-              onClick={() => handleScroll(item.href)}
+              component="a"
+              href={item.href}
+              onClick={(e) => handleScroll(e, item.href)}
               sx={{
                 borderRadius: '12px',
                 py: 1.2,
@@ -120,6 +139,34 @@ export default function Navbar(props: Props) {
             </ListItemButton>
           </ListItem>
         ))}
+
+        <ListItem disablePadding sx={{ mb: 1 }}>
+          <ListItemButton
+            onClick={() => {
+              setMobileOpen(false);
+              openCartDrawer();
+            }}
+            sx={{
+              borderRadius: '12px',
+              py: 1.2,
+              px: 2,
+              backgroundColor: 'rgba(16, 185, 129, 0.15)',
+              '&:hover': {
+                backgroundColor: 'rgba(16, 185, 129, 0.25)',
+              },
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 38 }}>
+              <ShoppingBagOutlinedIcon sx={{ color: '#34d399' }} />
+            </ListItemIcon>
+            <ListItemText
+              primary="Mi Carrito de Pedido"
+              primaryTypographyProps={{
+                sx: { fontSize: '0.95rem', fontWeight: 600, color: '#34d399' },
+              }}
+            />
+          </ListItemButton>
+        </ListItem>
       </List>
 
       <Box sx={{ pt: 2, borderTop: '1px solid rgba(52, 211, 153, 0.15)' }}>
@@ -144,16 +191,17 @@ export default function Navbar(props: Props) {
     </Box>
   );
 
-  const container = window !== undefined ? () => window().document.body : undefined;
+  const container = windowProp !== undefined ? () => windowProp().document.body : undefined;
 
   return (
-    <AppBar position="sticky" elevation={0}>
+    <AppBar position="sticky" elevation={0} sx={{ zIndex: 1100 }}>
       <Container maxWidth="lg">
         <Toolbar disableGutters sx={{ minHeight: { xs: 64, md: 72 }, justifyContent: 'space-between' }}>
           {/* Logo y Nombre de Marca */}
           <Box
             component="a"
             href="#inicio"
+            onClick={(e) => handleScroll(e, '#inicio')}
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -215,7 +263,9 @@ export default function Navbar(props: Props) {
             {navItems.map((item) => (
               <Button
                 key={item.label}
-                onClick={() => handleScroll(item.href)}
+                component="a"
+                href={item.href}
+                onClick={(e) => handleScroll(e, item.href)}
                 sx={{
                   color: '#e5e7eb !important',
                   fontSize: '0.9rem',
@@ -224,6 +274,7 @@ export default function Navbar(props: Props) {
                   py: 0.8,
                   borderRadius: '10px',
                   backgroundColor: 'transparent !important',
+                  textDecoration: 'none !important',
                   '&:hover': {
                     color: '#34d399 !important',
                     backgroundColor: 'rgba(16, 185, 129, 0.08) !important',
@@ -235,8 +286,30 @@ export default function Navbar(props: Props) {
             ))}
           </Box>
 
-          {/* Botón WhatsApp de Acción Rápida (Escritorio) y Menú Móvil */}
+          {/* Botones de Acción (Carrito y WhatsApp) */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<ShoppingBagOutlinedIcon />}
+              onClick={openCartDrawer}
+              sx={{
+                borderColor: 'rgba(52, 211, 153, 0.3) !important',
+                color: '#34d399 !important',
+                backgroundColor: 'rgba(16, 185, 129, 0.08) !important',
+                px: 1.8,
+                py: 0.8,
+                fontWeight: 600,
+                fontSize: '0.82rem',
+                '&:hover': {
+                  backgroundColor: 'rgba(16, 185, 129, 0.18) !important',
+                  borderColor: '#10b981 !important',
+                },
+              }}
+            >
+              Carrito
+            </Button>
+
             <Button
               variant="contained"
               size="medium"
