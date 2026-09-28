@@ -207,7 +207,7 @@ export default function Home() {
                   <Image
                     className="imageCardHome"
                     src="/plant1.png"
-                    alt="Bonsái Ficus Retusa Ginseng - Raíces del Oriente"
+                    alt="Bonsái Portulacaria afra (Jade Enano) - Raíces del Oriente"
                     width={480}
                     height={480}
                     priority
@@ -222,10 +222,10 @@ export default function Home() {
                 {/* Info del Bonsái en Tarjeta */}
                 <Box sx={{ mt: 1 }}>
                   <Typography variant="h5" sx={{ fontWeight: 800, color: "#f9fafb", lineHeight: 1.2 }}>
-                    Ficus Retusa Ginseng
+                    Portulacaria afra — Jade Enano
                   </Typography>
                   <Typography variant="caption" sx={{ color: "#34d399", fontStyle: "italic", display: "block", mb: 1 }}>
-                    Ficus microcarpa var. nitida
+                    Portulacaria afra &bull; Árbol de la Abundancia
                   </Typography>
 
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>

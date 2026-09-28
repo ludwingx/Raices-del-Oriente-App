@@ -21,38 +21,20 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import SpaIcon from "@mui/icons-material/Spa";
-import YardIcon from "@mui/icons-material/Yard";
-import LocalFloristIcon from "@mui/icons-material/LocalFlorist";
-import ParkIcon from "@mui/icons-material/Park";
 import GrassIcon from "@mui/icons-material/Grass";
-import FilterVintageIcon from "@mui/icons-material/FilterVintage";
-import { bonsais, Bonsai } from "./plants";
-
-// Iconografía botánica exclusiva por especie (sin fotos de producto)
-const speciesIcons: Record<number, React.ReactNode> = {
-  1: <SpaIcon sx={{ fontSize: 24, color: "#34d399" }} />, // Ficus Retusa
-  2: <ParkIcon sx={{ fontSize: 24, color: "#10b981" }} />, // Enebro Shimpaku
-  3: <YardIcon sx={{ fontSize: 24, color: "#6ee7b7" }} />, // Olmo Chino
-  4: <LocalFloristIcon sx={{ fontSize: 24, color: "#f472b6" }} />, // Carmona (Flores)
-  5: <GrassIcon sx={{ fontSize: 24, color: "#a7f3d0" }} />, // Jade Enano
-  6: <FilterVintageIcon sx={{ fontSize: 24, color: "#fbbf24" }} />, // Pino Negro
-};
+import CompareArrowsIcon from "@mui/icons-material/CompareArrows";
+import { speciesProfiles } from "./plants";
 
 export default function CareGuide() {
-  // Filtro por entorno o tipo (interior, exterior, colección, todos)
-  const [activeCategory, setActiveCategory] = useState<string>("all");
+  // Especie activa seleccionada: 'portulacaria' (0) o 'crassula' (1)
+  const [activeSpeciesId, setActiveSpeciesId] = useState<string>("portulacaria");
 
-  // Especie seleccionada actualmente para la guía (por defecto la primera)
-  const [selectedBonsai, setSelectedBonsai] = useState<Bonsai>(bonsais[0]);
+  const selectedSpecies =
+    speciesProfiles.find((s) => s.id === activeSpeciesId) || speciesProfiles[0];
 
-  const filteredSpecies =
-    activeCategory === "all"
-      ? bonsais
-      : bonsais.filter((b) => b.category === activeCategory);
-
-  const openWhatsAppQuestion = (bonsaiName: string) => {
+  const openWhatsAppQuestion = (speciesName: string) => {
     const message = encodeURIComponent(
-      `¡Hola Raíces del Oriente! 🌿 Tengo una consulta sobre los cuidados de la especie *${bonsaiName}*. ¿Podrían orientarme?`
+      `¡Hola Raíces del Oriente! 🌿 Tengo una consulta sobre los cuidados de mi bonsái de la especie *${speciesName}*. ¿Podrían orientarme?`
     );
     if (typeof window !== "undefined") {
       window.open(`https://wa.me/59178900000?text=${message}`, "_blank");
@@ -79,7 +61,7 @@ export default function CareGuide() {
       }}
     >
       <Container maxWidth="lg">
-        {/* ENCABEZADO DE LA GUÍA */}
+        {/* ENCABEZADO DE LA SECCIÓN */}
         <Box sx={{ textAlign: "center", mb: 5 }}>
           <Chip
             label="ENCICLOPEDIA BOTÁNICA VIRTUAL"
@@ -97,212 +79,251 @@ export default function CareGuide() {
               mb: 1.5,
             }}
           >
-            Guía de Cuidados por Especie
+            Guía de Cuidados: Jade Enano vs. Jade Clásico
           </Typography>
           <Typography
             variant="body1"
             sx={{
               color: "#9ca3af",
-              maxWidth: 720,
+              maxWidth: 750,
               mx: "auto",
               fontSize: { xs: "0.95rem", md: "1.05rem" },
               lineHeight: 1.6,
             }}
           >
-            Cada especie de árbol responde a patrones fisiológicos únicos. Selecciona a continuación
-            el tipo o especie botánica que posees para consultar su manual técnico de riego, luz,
-            sustrato y adaptación al clima en Bolivia.
+            Nuestra colección se especializa en las dos especies reinas del bonsái suculento:{" "}
+            <strong style={{ color: "#34d399" }}>Portulacaria afra</strong> (hoja pequeña y ramas rojizas) y{" "}
+            <strong style={{ color: "#34d399" }}>Crassula ovata</strong> (hoja ovalada ancha y tronco leñoso).
+            Selecciona la especie para conocer su protocolo de cultivo exacto en Bolivia.
           </Typography>
         </Box>
 
         {/* ========================================================================= */}
-        {/* SELECTOR BOTÁNICO EXCLUSIVO POR ESPECIE (SIN CARDS REUTILIZADAS NI FOTOS) */}
+        {/* SELECTOR DE LAS 2 ESPECIES BOTÁNICAS REALES                               */}
+        {/* ========================================================================= */}
+        <Grid container spacing={2.5} sx={{ mb: 4 }}>
+          {/* OPCIÓN 1: PORTULACARIA AFRA */}
+          <Grid item xs={12} md={6}>
+            <Box
+              onClick={() => setActiveSpeciesId("portulacaria")}
+              sx={{
+                p: { xs: 2.5, md: 3 },
+                borderRadius: "20px",
+                cursor: "pointer",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                backgroundColor:
+                  activeSpeciesId === "portulacaria"
+                    ? "rgba(16, 185, 129, 0.2)"
+                    : "rgba(16, 28, 18, 0.6)",
+                border:
+                  activeSpeciesId === "portulacaria"
+                    ? "2px solid #10b981"
+                    : "1px solid rgba(52, 211, 153, 0.18)",
+                boxShadow:
+                  activeSpeciesId === "portulacaria"
+                    ? "0 0 30px rgba(16, 185, 129, 0.35)"
+                    : "none",
+                transform: activeSpeciesId === "portulacaria" ? "translateY(-3px)" : "none",
+                transition: "all 0.25s ease-in-out",
+                "&:hover": {
+                  borderColor: "#34d399",
+                  backgroundColor: "rgba(16, 185, 129, 0.14)",
+                },
+              }}
+            >
+              <Box>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1.5 }}>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                    <Box
+                      sx={{
+                        width: 48,
+                        height: 48,
+                        borderRadius: "14px",
+                        backgroundColor: "rgba(16, 185, 129, 0.25)",
+                        border: "1px solid #10b981",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#34d399",
+                      }}
+                    >
+                      <SpaIcon sx={{ fontSize: 28 }} />
+                    </Box>
+                    <Box>
+                      <Typography variant="h6" sx={{ fontWeight: 800, color: "#f9fafb", lineHeight: 1.2 }}>
+                        Portulacaria afra
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: "#34d399", fontStyle: "italic" }}>
+                        Jade Enano &bull; Spekboom &bull; Árbol de la Abundancia
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Chip
+                    label={activeSpeciesId === "portulacaria" ? "Seleccionada ✓" : "Ver Cuidados"}
+                    size="small"
+                    sx={{
+                      backgroundColor:
+                        activeSpeciesId === "portulacaria" ? "#10b981" : "rgba(255, 255, 255, 0.08)",
+                      color: activeSpeciesId === "portulacaria" ? "#0a110b" : "#d1d5db",
+                      fontWeight: 700,
+                      fontSize: "0.75rem",
+                    }}
+                  />
+                </Box>
+
+                <Typography variant="body2" sx={{ color: "#d1d5db", lineHeight: 1.6, mb: 2 }}>
+                  Bonsái de ramas rojizas flexibles y diminutas hojas carnosas redondas (1-1.5 cm).
+                  Alta tasa de ramificación para modelado fino en estilos Sokan, Moyogi y Neagari.
+                </Typography>
+              </Box>
+
+              <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", pt: 1, borderTop: "1px solid rgba(52, 211, 153, 0.12)" }}>
+                <span className="badge-tag badge-green">Hojas: 1 a 1.5 cm</span>
+                <span className="badge-tag badge-gold">Tallos Rojizos</span>
+                <span className="badge-tag badge-blue">5 Ejemplares en Tienda</span>
+              </Box>
+            </Box>
+          </Grid>
+
+          {/* OPCIÓN 2: CRASSULA OVATA */}
+          <Grid item xs={12} md={6}>
+            <Box
+              onClick={() => setActiveSpeciesId("crassula")}
+              sx={{
+                p: { xs: 2.5, md: 3 },
+                borderRadius: "20px",
+                cursor: "pointer",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                backgroundColor:
+                  activeSpeciesId === "crassula"
+                    ? "rgba(16, 185, 129, 0.2)"
+                    : "rgba(16, 28, 18, 0.6)",
+                border:
+                  activeSpeciesId === "crassula"
+                    ? "2px solid #10b981"
+                    : "1px solid rgba(52, 211, 153, 0.18)",
+                boxShadow:
+                  activeSpeciesId === "crassula"
+                    ? "0 0 30px rgba(16, 185, 129, 0.35)"
+                    : "none",
+                transform: activeSpeciesId === "crassula" ? "translateY(-3px)" : "none",
+                transition: "all 0.25s ease-in-out",
+                "&:hover": {
+                  borderColor: "#34d399",
+                  backgroundColor: "rgba(16, 185, 129, 0.14)",
+                },
+              }}
+            >
+              <Box>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1.5 }}>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                    <Box
+                      sx={{
+                        width: 48,
+                        height: 48,
+                        borderRadius: "14px",
+                        backgroundColor: "rgba(16, 185, 129, 0.25)",
+                        border: "1px solid #10b981",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#34d399",
+                      }}
+                    >
+                      <GrassIcon sx={{ fontSize: 28 }} />
+                    </Box>
+                    <Box>
+                      <Typography variant="h6" sx={{ fontWeight: 800, color: "#f9fafb", lineHeight: 1.2 }}>
+                        Crassula ovata
+                      </Typography>
+                      <Typography variant="caption" sx={{ color: "#34d399", fontStyle: "italic" }}>
+                        Árbol de Jade Clásico &bull; Planta de la Fortuna
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Chip
+                    label={activeSpeciesId === "crassula" ? "Seleccionada ✓" : "Ver Cuidados"}
+                    size="small"
+                    sx={{
+                      backgroundColor:
+                        activeSpeciesId === "crassula" ? "#10b981" : "rgba(255, 255, 255, 0.08)",
+                      color: activeSpeciesId === "crassula" ? "#0a110b" : "#d1d5db",
+                      fontWeight: 700,
+                      fontSize: "0.75rem",
+                    }}
+                  />
+                </Box>
+
+                <Typography variant="body2" sx={{ color: "#d1d5db", lineHeight: 1.6, mb: 2 }}>
+                  Tronco leñoso robusto y corteza grisácea con grandes hojas ovales carnosas (3-5 cm).
+                  Resistente a la sequía extrema; almacena abundante agua en sus tejidos arborescentes.
+                </Typography>
+              </Box>
+
+              <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", pt: 1, borderTop: "1px solid rgba(52, 211, 153, 0.12)" }}>
+                <span className="badge-tag badge-green">Hojas: 3 a 5 cm</span>
+                <span className="badge-tag badge-gold">Tronco Leñoso Grueso</span>
+                <span className="badge-tag badge-blue">Jade Clásico en Tienda</span>
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
+
+        {/* ========================================================================= */}
+        {/* CAJA COMPARATIVA RÁPIDA: ¿CÓMO DIFERENCIARLAS?                           */}
         {/* ========================================================================= */}
         <Box
           sx={{
-            mb: 4,
-            p: { xs: 2, md: 3 },
-            borderRadius: "20px",
-            backgroundColor: "rgba(16, 28, 18, 0.6)",
-            backdropFilter: "blur(12px)",
-            border: "1px solid rgba(52, 211, 153, 0.18)",
+            mb: 4.5,
+            p: 2.5,
+            borderRadius: "18px",
+            backgroundColor: "rgba(10, 20, 12, 0.65)",
+            border: "1px dashed rgba(52, 211, 153, 0.3)",
+            display: "flex",
+            alignItems: { xs: "flex-start", sm: "center" },
+            gap: 2,
+            flexDirection: { xs: "column", sm: "row" },
           }}
         >
-          {/* Pestañas de Filtro por Categoría / Hábitat */}
           <Box
             sx={{
+              p: 1.2,
+              borderRadius: "12px",
+              backgroundColor: "rgba(16, 185, 129, 0.15)",
+              color: "#34d399",
               display: "flex",
-              justifyContent: { xs: "flex-start", sm: "center" },
-              gap: 1,
-              flexWrap: "wrap",
-              mb: 2.5,
-              pb: 1.5,
-              borderBottom: "1px solid rgba(52, 211, 153, 0.12)",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
             }}
           >
-            {[
-              { id: "all", label: "🌿 Todas las Especies" },
-              { id: "interior", label: "🏡 Especies de Interior" },
-              { id: "exterior", label: "☀️ Especies de Exterior" },
-              { id: "coleccion", label: "💎 Especies de Colección" },
-            ].map((cat) => {
-              const active = activeCategory === cat.id;
-              return (
-                <Chip
-                  key={cat.id}
-                  label={cat.label}
-                  clickable
-                  onClick={() => setActiveCategory(cat.id)}
-                  sx={{
-                    borderRadius: "10px",
-                    fontWeight: active ? 700 : 500,
-                    fontSize: "0.82rem",
-                    backgroundColor: active
-                      ? "rgba(16, 185, 129, 0.25)"
-                      : "rgba(255, 255, 255, 0.04)",
-                    color: active ? "#34d399" : "#9ca3af",
-                    border: active
-                      ? "1px solid #10b981"
-                      : "1px solid rgba(255, 255, 255, 0.08)",
-                    transition: "all 0.2s ease-in-out",
-                    "&:hover": {
-                      backgroundColor: "rgba(16, 185, 129, 0.15)",
-                      borderColor: "#34d399",
-                      color: "#f3f4f6",
-                    },
-                  }}
-                />
-              );
-            })}
+            <CompareArrowsIcon sx={{ fontSize: 26 }} />
           </Box>
-
-          {/* Selector de Especies: Botones Botánicos estilizados tipo Selector */}
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: {
-                xs: "repeat(1, 1fr)",
-                sm: "repeat(2, 1fr)",
-                md: "repeat(3, 1fr)",
-              },
-              gap: 1.5,
-            }}
-          >
-            {filteredSpecies.map((bonsai) => {
-              const isSelected = selectedBonsai.id === bonsai.id;
-
-              return (
-                <Box
-                  key={bonsai.id}
-                  onClick={() => setSelectedBonsai(bonsai)}
-                  sx={{
-                    p: 1.8,
-                    borderRadius: "14px",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1.8,
-                    backgroundColor: isSelected
-                      ? "rgba(16, 185, 129, 0.18)"
-                      : "rgba(10, 18, 12, 0.7)",
-                    border: isSelected
-                      ? "2px solid #10b981"
-                      : "1px solid rgba(52, 211, 153, 0.15)",
-                    boxShadow: isSelected
-                      ? "0 0 20px rgba(16, 185, 129, 0.35)"
-                      : "none",
-                    transform: isSelected ? "scale(1.01)" : "none",
-                    transition: "all 0.2s ease-in-out",
-                    "&:hover": {
-                      borderColor: "#34d399",
-                      backgroundColor: isSelected
-                        ? "rgba(16, 185, 129, 0.22)"
-                        : "rgba(16, 185, 129, 0.08)",
-                    },
-                  }}
-                >
-                  {/* Icono Botánico estilizado */}
-                  <Box
-                    sx={{
-                      width: 44,
-                      height: 44,
-                      borderRadius: "12px",
-                      backgroundColor: isSelected
-                        ? "rgba(16, 185, 129, 0.25)"
-                        : "rgba(255, 255, 255, 0.05)",
-                      border: isSelected
-                        ? "1px solid #10b981"
-                        : "1px solid rgba(255, 255, 255, 0.1)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      flexShrink: 0,
-                    }}
-                  >
-                    {speciesIcons[bonsai.id] || <SpaIcon sx={{ color: "#34d399" }} />}
-                  </Box>
-
-                  {/* Textos de la Especie */}
-                  <Box sx={{ flex: 1, minWidth: 0 }}>
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        fontWeight: 700,
-                        color: isSelected ? "#34d399" : "#f3f4f6",
-                        fontSize: "0.92rem",
-                        lineHeight: 1.25,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      {bonsai.name}
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        display: "block",
-                        fontStyle: "italic",
-                        color: "#9ca3af",
-                        fontSize: "0.75rem",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      {bonsai.scientificName}
-                    </Typography>
-                  </Box>
-
-                  {/* Indicador de estado */}
-                  <Box sx={{ flexShrink: 0 }}>
-                    <Chip
-                      label={isSelected ? "Activo ✓" : bonsai.category === "interior" ? "Interior" : "Exterior"}
-                      size="small"
-                      sx={{
-                        fontSize: "0.68rem",
-                        height: 22,
-                        backgroundColor: isSelected
-                          ? "#10b981"
-                          : "rgba(255, 255, 255, 0.06)",
-                        color: isSelected ? "#0a110b" : "#9ca3af",
-                        fontWeight: 700,
-                      }}
-                    />
-                  </Box>
-                </Box>
-              );
-            })}
+          <Box sx={{ flex: 1 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 800, color: "#f3f4f6", mb: 0.3 }}>
+              Diferencia Botánica Clave:
+            </Typography>
+            <Typography variant="body2" sx={{ color: "#9ca3af", fontSize: "0.88rem", lineHeight: 1.5 }}>
+              La <strong style={{ color: "#34d399" }}>Portulacaria afra</strong> ramifica con gran facilidad gracias a sus tallos rojizos tiernos y hojas pequeñas (ideal para copa de bonsái tupida). La <strong style={{ color: "#34d399" }}>Crassula ovata</strong> desarrolla un tronco mucho más macizo y hojas tres veces más grandes, requiriendo riegos mucho más espaciados.
+            </Typography>
           </Box>
         </Box>
 
         {/* ========================================================================= */}
-        {/* FICHA TÉCNICA BOTÁNICA DE LA ESPECIE SELECCIONADA                        */}
+        {/* FICHA TÉCNICA BOTÁNICA DE LA ESPECIE ACTIVA                              */}
         {/* ========================================================================= */}
         <Card
           sx={{
             background:
-              "linear-gradient(155deg, rgba(20, 34, 22, 0.9) 0%, rgba(11, 18, 12, 0.96) 100%)",
+              "linear-gradient(155deg, rgba(20, 34, 22, 0.92) 0%, rgba(11, 18, 12, 0.98) 100%)",
             backdropFilter: "blur(20px)",
             border: "1px solid rgba(52, 211, 153, 0.28)",
             borderRadius: "24px",
@@ -311,22 +332,12 @@ export default function CareGuide() {
               "0 20px 50px -10px rgba(0, 0, 0, 0.7), 0 0 35px rgba(16, 185, 129, 0.12)",
           }}
         >
-          {/* Cabecera Técnica de la Especie (Sin foto de producto) */}
+          {/* Cabecera Técnica de la Especie */}
           <Box sx={{ mb: 3.5 }}>
             <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 1.5 }}>
-              <span className="badge-tag badge-green">
-                {selectedBonsai.category === "interior"
-                  ? "🌿 Especie de Interior"
-                  : selectedBonsai.category === "exterior"
-                  ? "☀️ Especie de Exterior"
-                  : "💎 Conífera de Colección"}
-              </span>
-              <span className="badge-tag badge-blue">
-                Dificultad: {selectedBonsai.difficulty}
-              </span>
-              <span className="badge-tag badge-gold">
-                Frecuencia: {selectedBonsai.care.wateringFrequency}
-              </span>
+              <span className="badge-tag badge-green">Familia: {selectedSpecies.family}</span>
+              <span className="badge-tag badge-gold">Origen: {selectedSpecies.origin}</span>
+              <span className="badge-tag badge-blue">Riego: {selectedSpecies.care.wateringFrequency}</span>
             </Box>
 
             <Typography
@@ -334,32 +345,32 @@ export default function CareGuide() {
               sx={{
                 fontWeight: 800,
                 color: "#f9fafb",
-                fontSize: { xs: "1.65rem", md: "2.3rem" },
+                fontSize: { xs: "1.7rem", md: "2.4rem" },
                 letterSpacing: "-0.01em",
                 mb: 0.5,
               }}
             >
-              Ficha Técnica: {selectedBonsai.name}
+              Manual de Cuidados: {selectedSpecies.commonName}
             </Typography>
 
             <Typography
               variant="subtitle1"
               sx={{ fontStyle: "italic", color: "#34d399", mb: 1.5, fontWeight: 500 }}
             >
-              Nombre científico: {selectedBonsai.scientificName} &bull; Adaptabilidad: Óptima en Bolivia
+              {selectedSpecies.scientificName} &bull; Adaptabilidad: Óptima en Bolivia
             </Typography>
 
             <Typography
               variant="body1"
               sx={{ color: "#d1d5db", maxWidth: 880, lineHeight: 1.7, fontSize: "0.95rem" }}
             >
-              {selectedBonsai.description}
+              {selectedSpecies.summary}
             </Typography>
           </Box>
 
           <Divider sx={{ borderColor: "rgba(52, 211, 153, 0.15)", mb: 4 }} />
 
-          {/* Rejilla de Cuidados Específicos (6 Paneles Botánicos Clave) */}
+          {/* Rejilla de Cuidados Específicos (6 Paneles Clave) */}
           <Grid container spacing={2.5}>
             {/* 1. RIEGO */}
             <Grid item xs={12} md={6}>
@@ -390,7 +401,7 @@ export default function CareGuide() {
                     </Typography>
                   </Box>
                   <Chip
-                    label={selectedBonsai.care.wateringFrequency}
+                    label={selectedSpecies.care.wateringFrequency}
                     size="small"
                     sx={{
                       backgroundColor: "rgba(59, 130, 246, 0.2)",
@@ -401,7 +412,7 @@ export default function CareGuide() {
                   />
                 </Box>
                 <Typography variant="body2" sx={{ color: "#e2e8f0", lineHeight: 1.65 }}>
-                  {selectedBonsai.care.watering}
+                  {selectedSpecies.care.watering}
                 </Typography>
               </Box>
             </Grid>
@@ -435,7 +446,7 @@ export default function CareGuide() {
                     </Typography>
                   </Box>
                   <Chip
-                    label={selectedBonsai.care.sunlightType}
+                    label={selectedSpecies.care.sunlightType}
                     size="small"
                     sx={{
                       backgroundColor: "rgba(245, 158, 11, 0.2)",
@@ -446,7 +457,7 @@ export default function CareGuide() {
                   />
                 </Box>
                 <Typography variant="body2" sx={{ color: "#e2e8f0", lineHeight: 1.65 }}>
-                  {selectedBonsai.care.sunlight}
+                  {selectedSpecies.care.sunlight}
                 </Typography>
               </Box>
             </Grid>
@@ -472,7 +483,7 @@ export default function CareGuide() {
                   </Typography>
                 </Box>
                 <Typography variant="body2" sx={{ color: "#e2e8f0", lineHeight: 1.65 }}>
-                  {selectedBonsai.care.pruning}
+                  {selectedSpecies.care.pruning}
                 </Typography>
               </Box>
             </Grid>
@@ -498,7 +509,7 @@ export default function CareGuide() {
                   </Typography>
                 </Box>
                 <Typography variant="body2" sx={{ color: "#e2e8f0", lineHeight: 1.65 }}>
-                  {selectedBonsai.care.substrate}
+                  {selectedSpecies.care.substrate}
                 </Typography>
               </Box>
             </Grid>
@@ -524,7 +535,7 @@ export default function CareGuide() {
                   </Typography>
                 </Box>
                 <Typography variant="body2" sx={{ color: "#f3f4f6", lineHeight: 1.65 }}>
-                  {selectedBonsai.care.boliviaTips}
+                  {selectedSpecies.care.boliviaTips}
                 </Typography>
               </Box>
             </Grid>
@@ -550,13 +561,13 @@ export default function CareGuide() {
                   </Typography>
                 </Box>
                 <Typography variant="body2" sx={{ color: "#fee2e2", lineHeight: 1.65 }}>
-                  {selectedBonsai.care.commonMistakes}
+                  {selectedSpecies.care.commonMistakes}
                 </Typography>
               </Box>
             </Grid>
           </Grid>
 
-          {/* Pie de Asesoría Botánica */}
+          {/* Pie de Asistencia Botánica */}
           <Box
             sx={{
               display: "flex",
@@ -572,7 +583,7 @@ export default function CareGuide() {
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <CheckCircleOutlineIcon sx={{ color: "#34d399" }} />
               <Typography variant="caption" sx={{ color: "#9ca3af" }}>
-                Guía botánica avalada por cultivadores locales de Raíces del Oriente.
+                Asesoría botánica vitalicia incluida con tu bonsái de Raíces del Oriente.
               </Typography>
             </Box>
 
@@ -580,7 +591,7 @@ export default function CareGuide() {
               <Button
                 variant="outlined"
                 startIcon={<WhatsAppIcon />}
-                onClick={() => openWhatsAppQuestion(selectedBonsai.name)}
+                onClick={() => openWhatsAppQuestion(selectedSpecies.commonName)}
                 sx={{
                   borderColor: "rgba(52, 211, 153, 0.3) !important",
                   color: "#34d399 !important",
@@ -592,7 +603,7 @@ export default function CareGuide() {
                   },
                 }}
               >
-                Consultar dudas de esta especie por WhatsApp
+                Consultar cuidados por WhatsApp
               </Button>
 
               <Button
@@ -606,7 +617,7 @@ export default function CareGuide() {
                   textTransform: "none",
                 }}
               >
-                Ver disponibilidad en Catálogo
+                Ver ejemplares en Catálogo
               </Button>
             </Box>
           </Box>

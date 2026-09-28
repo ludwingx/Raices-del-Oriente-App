@@ -17,7 +17,8 @@ export type Bonsai = {
   id: number;
   name: string;
   scientificName: string;
-  category: 'interior' | 'exterior' | 'coleccion';
+  speciesType: 'portulacaria' | 'crassula';
+  category: 'portulacaria' | 'crassula';
   difficulty: 'Fácil' | 'Intermedio' | 'Avanzado';
   estimatedAge: string;
   height: string;
@@ -33,35 +34,90 @@ export type Bonsai = {
 };
 
 export const categories = [
-  { id: 'all', label: 'Todos los Bonsáis', icon: '🌿' },
-  { id: 'interior', label: 'Bonsáis de Interior', icon: '🏡' },
-  { id: 'exterior', label: 'Bonsáis de Exterior', icon: '☀️' },
-  { id: 'coleccion', label: 'Piezas de Colección', icon: '💎' },
+  { id: 'all', label: 'Todos los Ejemplares', icon: '🌿' },
+  { id: 'portulacaria', label: 'Portulacaria afra (5)', icon: '🪴' },
+  { id: 'crassula', label: 'Crassula ovata (1)', icon: '🌱' },
 ] as const;
+
+export const speciesProfiles = [
+  {
+    id: 'portulacaria',
+    commonName: 'Jade Enano / Arbusto Elefante',
+    scientificName: 'Portulacaria afra',
+    family: 'Didiereaceae',
+    origin: 'Sudáfrica',
+    summary:
+      'Bonsái suculento de ramas rojizas flexibles y diminutas hojas redondas carnosas verde esmeralda. Posee una extraordinaria ramificación para modelado fino en estilos Sokan, Moyogi y Neagari. Muy tolerante a podas drásticas y de rápida recuperación.',
+    differentiatingTraits:
+      'Hojas pequeñas (1 a 1.5 cm), tallos rojizos que se tornan cobrizos, ramificación muy densa y porte compacto.',
+    care: {
+      watering:
+        'Riego moderado: humedecer bien el sustrato y permitir que seque un 80% antes de regar nuevamente. En Santa Cruz (calor húmedo) regar cada 4 a 6 días; en La Paz y Cochabamba cada 7 a 10 días.',
+      sunlight:
+        'Sol directo matutino o luz filtrada intensa. Con buena exposición solar, los bordes de sus hojas adoptan un elegante tono rojizo y la copa se mantiene compacta.',
+      location:
+        'Interiores muy luminosos cerca de ventanales o balcones y galerías exteriores protegidas.',
+      pruning:
+        'Pinzado regular con las yemas de los dedos en los brotes tiernos superiores. Estimula brotes dobles en cada nudo para una silueta tupida.',
+      substrate:
+        '70% mineral drenante (grano volcánico, pómice o arena gruesa) + 30% tierra fértil con perlita. Exige drenaje inmediato sin encharcamientos.',
+      temperature:
+        '10°C a 35°C. Resiste altas temperaturas pero debe protegerse de heladas nocturnas bajo 5°C.',
+      boliviaTips:
+        'En Santa Cruz prospera con rapidez durante todo el año. En La Paz y El Alto mantener dentro de casa cerca de ventanas protegidas del frío nocturno.',
+      commonMistakes:
+        'Regar con el sustrato todavía mojado o usar platos con agua estancada. La Portulacaria resiste mejor la falta de agua que el encharcamiento.',
+      wateringFrequency: 'Media (2-3 veces/semana)' as const,
+      sunlightType: 'Semisombra / Sol Mañanero' as const,
+    },
+  },
+  {
+    id: 'crassula',
+    commonName: 'Árbol de Jade Tradicional',
+    scientificName: 'Crassula ovata',
+    family: 'Crassulaceae',
+    origin: 'Sudáfrica y Mozambique',
+    summary:
+      'El clásico y venerable Árbol de Jade. Se distingue por su tronco robusto y leñoso de corteza grisácea y sus hojas ovaladas de gran porte (3 a 5 cm) que actúan como poderosos depósitos naturales de agua. En el Feng Shui es el símbolo máximo de estabilidad y fortuna.',
+    differentiatingTraits:
+      'Hojas ovales grandes y gruesas (3 a 5 cm), tronco leñoso grueso y sólido, crecimiento más pausado y porte arborescente escultórico.',
+    care: {
+      watering:
+        'Riego bajo y espaciado: regar únicamente cuando el sustrato esté completamente seco (cada 10 a 15 días en promedio). Sus hojas gruesas almacenan agua por semanas.',
+      sunlight:
+        'Luz brillante indirecta o sol suave de la mañana. No colocar a sol abrasador de mediodía de golpe para evitar quemaduras foliares.',
+      location:
+        'Espacios interiores con excelente circulación de aire, salas de estar luminosas o mostradores ejecutivos.',
+      pruning:
+        'Poda selectiva con tijeras afiladas y desinfectadas cortando sobre el nudo. Dejar cicatrizar el corte al aire libre sin regar por 48 horas.',
+      substrate:
+        '80% mineral (pómice o grava fina) + 20% materia orgánica enriquecida. Necesita secar rápidamente para resguardar su tronco leñoso.',
+      temperature:
+        '12°C a 32°C. Muy sensible a temperaturas bajas sostenidas por debajo de 8°C.',
+      boliviaTips:
+        'Ideal para interiores en Cochabamba, Sucre y La Paz por el clima seco. En Santa Cruz requiere sustrato ultradrenante para evitar que la humedad ambiental sature la raíz.',
+      commonMistakes:
+        'Exceso de riego: es la causa #1 de pérdida de Crassula ovata. Si el tronco se siente blando, suspender el riego de inmediato y aumentar ventilación.',
+      wateringFrequency: 'Baja (1 vez/semana)' as const,
+      sunlightType: 'Luz Indirecta Brillante' as const,
+    },
+  },
+];
 
 export const bonsais: Bonsai[] = [
   {
     id: 1,
-    name: 'Ficus Retusa Ginseng',
-    scientificName: 'Ficus microcarpa var. nitida',
-    category: 'interior',
+    name: 'Portulacaria afra — Doble Tronco (Sokan)',
+    scientificName: 'Portulacaria afra',
+    speciesType: 'portulacaria',
+    category: 'portulacaria',
     difficulty: 'Fácil',
-    estimatedAge: '7 años',
+    estimatedAge: '8 años',
     height: '28 cm',
-    potType: 'Cerámica esmaltada verde jade',
-    description: 'Impresionante bonsái de raíces aéreas bulbosas y follaje perenne de verde lustroso. Muy adaptable al interior del hogar y resistente a periodos de olvido de riego.',
-    care: {
-      watering: '1 a 2 veces por semana. Dejar secar ligeramente la capa superior del sustrato antes de volver a humedecer. En verano, pulverizar hojas suavemente.',
-      sunlight: 'Luz brillante indirecta. Tolera semisombra en interiores bien iluminados. Evitar sol abrasador directo al mediodía.',
-      location: 'Ideal para escritorios de oficina, salas de estar luminosas o muebles cerca de ventanales.',
-      pruning: 'Pinzado suave de brotes nuevos en primavera y verano para mantener la silueta redondeada.',
-      substrate: '70% akadama o grano volcánico fino + 30% tierra negra con humus de lombriz para retener nutrientes.',
-      temperature: '18°C a 30°C. Proteger de corrientes de aire frío por debajo de 12°C.',
-      boliviaTips: 'En Santa Cruz se adapta con facilidad al calor húmedo. En La Paz o Cochabamba, mantener siempre dentro de casa protegido de las heladas nocturnas.',
-      commonMistakes: 'Cambiarlo de lugar continuamente (el Ficus tira hojas cuando se le mueve de sitio) o encharcar el plato de drenaje.',
-      wateringFrequency: 'Media (2-3 veces/semana)',
-      sunlightType: 'Luz Indirecta Brillante',
-    },
+    potType: 'Bandeja ovalada de gres esmaltado beige arena',
+    description:
+      'Espléndido bonsái suculento de Jade Enano modelado en estilo doble tronco (Sokan). Tronco bifurcado con raíces expuestas vigorosas y copa simétrica de pequeñas hojas carnosas verde esmeralda con ribetes cobrizos.',
+    care: speciesProfiles[0].care,
     price: 180,
     imageUrl: '/plant1.png',
     rating: 4.9,
@@ -71,26 +127,17 @@ export const bonsais: Bonsai[] = [
   },
   {
     id: 2,
-    name: 'Enebro Rastrero — Shimpaku',
-    scientificName: 'Juniperus procumbens "Nana"',
-    category: 'exterior',
-    difficulty: 'Intermedio',
-    estimatedAge: '11 años',
-    height: '35 cm',
-    potType: 'Gres japonés sin esmaltar (Tokoname style)',
-    description: 'Bonsái clásico de conífera con ramas esculpidas en estilo cascada y madera muerta natural (Jin). Simboliza la longevidad, la tenacidad y la elegancia perenne.',
-    care: {
-      watering: 'Riego generoso cuando la superficie del sustrato esté seca. Pulverizar follaje por las tardes para remover el polvo.',
-      sunlight: 'Exterior a pleno sol (mínimo 4 a 5 horas de luz solar directa diaria). Indispensable para mantener el color verde azulado vivo.',
-      location: 'Jardines, terrazas abiertas, balcones bien ventilados y soleados. NUNCA en interiores cerrados sin luz solar.',
-      pruning: 'Pinzado de brotes con los dedos en primavera y verano; no cortar acículas con tijera para evitar que las puntas se oxiden de color marrón.',
-      substrate: '80% grano volcánico (Kiryu / Akadama / pómice) + 20% turba. Requiere drenaje ultrarrápido.',
-      temperature: 'Resistente desde -5°C hasta 35°C. Soporta vientos y cambios térmicos.',
-      boliviaTips: 'En La Paz y Cochabamba prospera de forma extraordinaria con la radiación solar andina. En Santa Cruz, colocar donde reciba buena brisa y sol matutino.',
-      commonMistakes: 'Colocarlo en interiores creyendo que es una planta de oficina. Los enebros mueren por asfixia y falta de sol si están encerrados.',
-      wateringFrequency: 'Media (2-3 veces/semana)',
-      sunlightType: 'Pleno Sol Exterior',
-    },
+    name: 'Portulacaria afra — Bosque Compacto (Kabudachi)',
+    scientificName: 'Portulacaria afra',
+    speciesType: 'portulacaria',
+    category: 'portulacaria',
+    difficulty: 'Fácil',
+    estimatedAge: '10 años',
+    height: '32 cm',
+    potType: 'Maceta rectangular esmaltada en negro azabache',
+    description:
+      'Ejemplar multicaule con múltiples troncos carnosos que emergen armónicamente de una misma base, creando la ilusión de un bosque en miniatura. Ramificación densa y follaje compacto de gran vigor.',
+    care: speciesProfiles[0].care,
     price: 260,
     imageUrl: '/plant2.png',
     rating: 5.0,
@@ -100,26 +147,17 @@ export const bonsais: Bonsai[] = [
   },
   {
     id: 3,
-    name: 'Olmo Chino en Roca',
-    scientificName: 'Ulmus parvifolia',
-    category: 'exterior',
+    name: 'Portulacaria afra — Erguido Informal (Moyogi)',
+    scientificName: 'Portulacaria afra',
+    speciesType: 'portulacaria',
+    category: 'portulacaria',
     difficulty: 'Fácil',
     estimatedAge: '9 años',
     height: '30 cm',
-    potType: 'Bandeja oval de terracota sellada',
-    description: 'Bonsái de tronco vigoroso con corteza rugosa y diminutas hojas dentadas de gran ramificación. Ideal para quienes inician en el arte y buscan rápido crecimiento.',
-    care: {
-      watering: 'Riego abundante durante época de crecimiento activo (primavera/verano); reducir en invierno cuando baje la temperatura.',
-      sunlight: 'Muy adaptable: pleno sol en invierno y primavera; agradecerá semisombra ligera en los días más calurosos del verano.',
-      location: 'Patios, galerías exteriores, terrazas o ventanas orientadas al este con circulación constante de aire fresco.',
-      pruning: 'Poda estructural a finales de invierno antes de la brotación. Durante el año, recortar brotes largos a dos hojas.',
-      substrate: '60% sustrato mineral drenante + 40% materia orgánica enriquecida.',
-      temperature: '5°C a 32°C. Es caducifolio o semicaducifolio según el frío invernal.',
-      boliviaTips: 'Ideal para el clima templado de los valles (Cochabamba, Tarija, Sucre). En Santa Cruz mantendrá sus hojas todo el año.',
-      commonMistakes: 'Dejar que el sustrato se seque por completo durante días calurosos; las hojas se secarán y caerán rápidamente.',
-      wateringFrequency: 'Alta (Diario en calor)',
-      sunlightType: 'Semisombra / Sol Mañanero',
-    },
+    potType: 'Maceta de cerámica azul cobalto esmaltada',
+    description:
+      'Silueta estilizada con suaves curvas naturales en su tronco principal y ramaje escalonado que genera profundidad visual. Ideal para centros de mesa o escritorios luminosos.',
+    care: speciesProfiles[0].care,
     price: 210,
     imageUrl: '/plant3.png',
     rating: 4.8,
@@ -129,89 +167,62 @@ export const bonsais: Bonsai[] = [
   },
   {
     id: 4,
-    name: 'Árbol de Fukien — Carmona',
-    scientificName: 'Carmona microphylla (Ehretia buxifolia)',
-    category: 'interior',
-    difficulty: 'Intermedio',
-    estimatedAge: '6 años',
-    height: '24 cm',
-    potType: 'Cerámica blanca marfil con plato de drenaje',
-    description: 'Elegante bonsái tropical de corteza agrietada grisácea con pequeñas flores blancas estrelladas que florecen en primavera y pequeños frutos rojizos.',
-    care: {
-      watering: 'Mantener humedad constante y ligera sin encharcar. Sensible tanto a la sequedad extrema como al exceso de agua en las raíces.',
-      sunlight: 'Mucha luz tamizada o sol suave de la mañana. Proteger de los rayos abrasadores del mediodía que queman sus pétalos.',
-      location: 'Interior cálido y húmedo. Colocar sobre una bandeja con gravilla húmeda para incrementar la humedad ambiental.',
-      pruning: 'Recortar nuevos brotes a dos hojas cuando hayan desarrollado 6 a 8 hojas para mantener la copa compacta.',
-      substrate: 'Mezcla equilibrada: 50% akadama + 25% humus + 25% grava volcánica fina.',
-      temperature: '15°C a 28°C. Muy sensible a temperaturas bajo 12°C.',
-      boliviaTips: 'En Santa Cruz adora la humedad ambiental. En La Paz debe mantenerse dentro de casa cerca de luz, lejos de corrientes frías.',
-      commonMistakes: 'Ubicarlo cerca de salidas directas de aire acondicionado o calefactores; el aire seco hace caer sus flores y brotes.',
-      wateringFrequency: 'Media (2-3 veces/semana)',
-      sunlightType: 'Luz Indirecta Brillante',
-    },
+    name: 'Portulacaria afra — Copa Abundante (Sokan)',
+    scientificName: 'Portulacaria afra',
+    speciesType: 'portulacaria',
+    category: 'portulacaria',
+    difficulty: 'Fácil',
+    estimatedAge: '7 años',
+    height: '26 cm',
+    potType: 'Bandeja baja de gres sellado en tono arena',
+    description:
+      'Bonsái de la abundancia con nebari expuesto sobre el sustrato drenante. Ramas jóvenes flexibles de tonalidad rojiza con brotes continuos muy fáciles de pinzar y modelar.',
+    care: speciesProfiles[0].care,
     price: 150,
     imageUrl: '/plant4.png',
     rating: 4.7,
     reviewsCount: 15,
-    badge: 'Con Floración',
+    badge: 'Abundancia',
     isAvailable: true,
   },
   {
     id: 5,
-    name: 'Jade Enano — Árbol de la Abundancia',
+    name: 'Portulacaria afra — Inclinado Dinámico (Shakan)',
     scientificName: 'Portulacaria afra',
-    category: 'interior',
+    speciesType: 'portulacaria',
+    category: 'portulacaria',
     difficulty: 'Fácil',
     estimatedAge: '8 años',
-    height: '26 cm',
-    potType: 'Maceta artesanal de arcilla cocida oscura',
-    description: 'Bonsái suculento de tronco carnoso y hojas redondas esmeralda. En la tradición del Feng Shui atrae la prosperidad y la buena energía en hogares y negocios.',
-    care: {
-      watering: 'Riego moderado y espaciado. Dejar que la tierra se seque completamente entre riegos. En invierno, regar cada 10 a 15 días.',
-      sunlight: 'Tolera desde sol pleno directo hasta interiores muy bien iluminados. Cuanta más luz reciba, más compactas crecerán sus hojas.',
-      location: 'Entradas de residencias, mostradores comerciales, escritorios o balcones soleados.',
-      pruning: 'Muy fácil modelado: se poda pinzando con los dedos los pares de hojas superiores para ramificar los tallos carnosos.',
-      substrate: 'Sustrato para suculentas: 70% grava/arena gruesa/pómice + 30% tierra vegetal para drenaje inmediato.',
-      temperature: '10°C a 35°C. Tolera calor extremo pero no soporta heladas.',
-      boliviaTips: 'Es el bonsái más resistente para principiantes en cualquier ciudad de Bolivia. Si viajas por semanas, sobrevivirá sin problemas.',
-      commonMistakes: 'El exceso de riego (regar cuando la tierra aún está húmeda pudre su tallo carnoso). Menos agua es más salud para el Jade.',
-      wateringFrequency: 'Baja (1 vez/semana)',
-      sunlightType: 'Semisombra / Sol Mañanero',
-    },
+    height: '24 cm',
+    potType: 'Maceta hexagonal esmaltada en verde bosque brillante',
+    description:
+      'Diseño asimétrico inspirado en árboles que crecen en laderas azotadas por el viento. Su tronco inclinado equilibra armoniosamente una copa compacta orientada hacia la luz.',
+    care: speciesProfiles[0].care,
     price: 195,
     imageUrl: '/plant5.png',
     rating: 4.9,
     reviewsCount: 42,
-    badge: 'Ideal Principiantes',
+    badge: 'Diseño Zen',
     isAvailable: true,
   },
   {
     id: 6,
-    name: 'Pino Negro Japonés — Kuromatsu',
-    scientificName: 'Pinus thunbergii',
-    category: 'coleccion',
-    difficulty: 'Avanzado',
-    estimatedAge: '16 años',
-    height: '42 cm',
-    potType: 'Contenedor tradicional de cerámica Yixing',
-    description: 'El rey indiscutible de los bonsáis japoneses. Tronco imponente con corteza escamosa y agujas rígidas de verde profundo. Una reliquia viva de alto prestigio.',
-    care: {
-      watering: 'Riego profundo cuando el sustrato seque. El pino necesita periodos secos entre riegos para que las raíces respiren.',
-      sunlight: 'Pleno sol exterior ininterrumpido (6+ horas diarias). Sin sol pleno, las acículas pierden fuerza y crecen desproporcionadas.',
-      location: 'Podio exterior, pedestal central de jardín, patio de honor o terraza soleada.',
-      pruning: 'Requiere técnicas avanzadas: descandelado (Mekiri) en verano para inducir segunda brotación y entresacado de acículas en otoño.',
-      substrate: '90% grano volcánico (Kiryu + Akadama dura) con prácticamente nula materia orgánica para drenaje instantáneo.',
-      temperature: '-10°C a 35°C. Necesita sentir las estaciones del año para su ciclo biológico.',
-      boliviaTips: 'En ciudades de altura (La Paz, El Alto, Oruro, Potosí) responde magníficamente a la intensa radiación ultravioleta. En Santa Cruz requiere sustrato ultradrenante.',
-      commonMistakes: 'Intentar tenerlo dentro de una habitación. El pino negro es un árbol puramente de exterior y morirá en interiores en pocas semanas.',
-      wateringFrequency: 'Media (2-3 veces/semana)',
-      sunlightType: 'Pleno Sol Exterior',
-    },
-    price: 380,
+    name: 'Crassula ovata — Árbol de Jade Tradicional',
+    scientificName: 'Crassula ovata',
+    speciesType: 'crassula',
+    category: 'crassula',
+    difficulty: 'Fácil',
+    estimatedAge: '12 años',
+    height: '35 cm',
+    potType: 'Bandeja circular artesanal de terracota mate',
+    description:
+      'El auténtico Árbol de Jade (Crassula ovata). Tronco grueso y macizo de corteza grisácea leñosa con hojas carnosas ovales de gran porte (3 a 5 cm) que almacenan agua de forma natural. Simboliza la buena fortuna y la longevidad.',
+    care: speciesProfiles[1].care,
+    price: 280,
     imageUrl: '/plant6.png',
     rating: 5.0,
     reviewsCount: 11,
-    badge: 'Colección Maestra',
+    badge: 'Jade Clásico',
     isAvailable: true,
   },
 ];
